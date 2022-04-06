@@ -246,7 +246,7 @@ boost3 = gbm(medianHouseValue ~ longitude + latitude + housingMedianAge + totalR
 
 rmse(boost3, CAhousing_test)
 ```
-
+## RMSE
 ```{r, echo=FALSE,message=FALSE, warning=FALSE}
 rmse(lm_medium, CAhousing_test)
 rmse(CAhousing.forest, CAhousing_test)
