@@ -71,11 +71,10 @@ dengue_tree_lse<-prune_1se(dengue_tree)
 
 ```{r, echo=FALSE,message=FALSE, warning=FALSE}
 dengue.forest = randomForest(total_cases ~ specific_humidity + precipitation_amt + season, data = dengue_train, importance = TRUE)
-yhat_test = predict(dengue.forest, dengue_test)
-plot(yhat_test)
+
 
 rmse(dengue.forest, dengue_test)
-vi = varImpPlot(dengue.forest, type=1)
+
 ```
 
 ```{r, echo=FALSE,message=FALSE, warning=FALSE}
@@ -90,13 +89,6 @@ partialPlot(dengue.forest, dengue_test, 'season', las=1)
 
 boost1 = gbm(total_cases ~ specific_humidity + precipitation_amt + season, data=dengue_train,interaction.depth=4, n.trees=500, shrinkage=.05)
 
-gbm.perf(boost1)
-
-yhat_test_gbm = predict(boost1, dengue_test, n.trees=500)
-plot(yhat_test_gbm)
-```
-
-```{r, echo=FALSE,message=FALSE, warning=FALSE}
 rmse(boost1, dengue_test)
 ```
 
@@ -179,7 +171,6 @@ rmse(greenbuildings.forest, greenbuildings_test)
 
 boost2 = gbm(revenue_year_square ~ .-Rent-leasing_rate-LEED-Energystar, data = greenbuildings_train,interaction.depth=4, n.trees=500, shrinkage=.05)
 
-gbm.perf(boost2)
 rmse(boost2, greenbuildings_test)
 ```
 
@@ -205,7 +196,7 @@ For this question, we know greenbuildings have many variables and "LEED" and "En
 
 Firstly, We used lasso to choose effective variables and predict how revenue per square was impacted by lasso and find the perfect lasso. We also created lm medium to find the relationship between revenue per square and other variables except LEED, Energystar, Rent, leasing_rate. After comparing the three different rmse, we decide to use lm medium as the model to compare with other different models.
 
-Next we used Random Forest Model and Gradient-Boosted Model with same variables of greenbuildngs. Then we predicted two models in the test data as the same as in lasso and lm medium. After comparing the rmse of these models, we selected the Random Forest Model because the rmse of this model is the smallest one.Then we finished partial dependence plots between revenue per square and "green_rating".
+Next we used Random Forest Model and Gradient-Boosted Model with same variables of greenbuildngs. Then we predicted two models in the test data as the same as in lasso and lm medium. After comparing the rmse of these models, we selected the Random Forest Model because the rmse of this model is the smallest one. Then we finished partial dependence plots between revenue per square and "green_rating".
 
 Finally, from partial values and partial plots, the difference between "green_rating"=1 and "green_rating" = 0 is 61.663. So it means the revenue per square will increase when house become "green certified". However, we think the revenue per square has little difference whether house are "green certified". The revenue per square might be influenced by other variables including stories, ages, and precipitation.
 
@@ -242,7 +233,6 @@ rmse(lm_medium, CAhousing_test)
 ## Random_Forest_Model
 ```{r, echo=FALSE,message=FALSE, warning=FALSE}
 
-
 CAhousing.forest = randomForest(medianHouseValue ~ longitude + latitude + housingMedianAge + totalRooms + totalBedrooms + population + households + medianIncome,data = CAhousing_train, importance = TRUE)
 
 rmse(CAhousing.forest, CAhousing_test)
@@ -252,10 +242,8 @@ rmse(CAhousing.forest, CAhousing_test)
 
 ```{r, echo=FALSE,message=FALSE, warning=FALSE}
 
-
 boost3 = gbm(medianHouseValue ~ longitude + latitude + housingMedianAge + totalRooms + totalBedrooms + population + households + medianIncome,data = CAhousing_train,interaction.depth=4, n.trees=500, shrinkage=.05)
 
-gbm.perf(boost3)
 rmse(boost3, CAhousing_test)
 ```
 
