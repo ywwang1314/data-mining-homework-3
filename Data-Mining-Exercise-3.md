@@ -42,15 +42,11 @@ smaller and statistically insignificant decline of 0.5 crimes.
 
 ## CART Model
 
-    ## [1] 32.52625
+    ## [1] 26.5398
 
 ## Random\_forest\_model
 
-![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-3-1.png)
-
-    ## [1] 31.95036
-
-![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-3-2.png)
+    ## [1] 24.00685
 
 ![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-4-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-4-2.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-4-3.png)
 
@@ -58,29 +54,15 @@ smaller and statistically insignificant decline of 0.5 crimes.
 
     ## Distribution not specified, assuming gaussian ...
 
-![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-5-1.png)
-
-    ## [1] 38
-    ## attr(,"smoother")
-    ## Call:
-    ## loess(formula = object$oobag.improve ~ x, enp.target = min(max(4, 
-    ##     length(x)/10), 50))
-    ## 
-    ## Number of Observations: 500 
-    ## Equivalent Number of Parameters: 39.85 
-    ## Residual Standard Error: 0.7328
-
-![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-5-2.png)
-
-    ## [1] 32.95391
+    ## [1] 27.64943
 
 ## RMSE
 
-    ## [1] 33.32354
+    ## [1] 23.1516
 
-    ## [1] 31.95036
+    ## [1] 24.00685
 
-    ## [1] 32.95391
+    ## [1] 27.64943
 
 RMSE of Gradient-boosted trees 30.63928 &gt; RMSE of CART 29.69053 &gt;
 RMSE of Random Forest 28.67363.
@@ -98,49 +80,37 @@ plots after Random Forest of this question.
 
 ## lasso and lm medium
 
-    ## [1] 935.8569
+    ## [1] 1005.703
 
-    ## [1] 1001.785
+    ## [1] 1059.221
 
 ## Random Forest Model
 
-    ## [1] 601.8695
+    ## [1] 687.0446
 
 ## Gradient-Boosted Tree Model
 
     ## Distribution not specified, assuming gaussian ...
 
-![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-12-1.png)
-
-    ## [1] 89
-    ## attr(,"smoother")
-    ## Call:
-    ## loess(formula = object$oobag.improve ~ x, enp.target = min(max(4, 
-    ##     length(x)/10), 50))
-    ## 
-    ## Number of Observations: 500 
-    ## Equivalent Number of Parameters: 39.85 
-    ## Residual Standard Error: 1106
-
-    ## [1] 826.2812
+    ## [1] 878.7862
 
 ## RMSE
 
-    ## [1] 935.8569
+    ## [1] 1005.703
 
-    ## [1] 1001.785
+    ## [1] 1059.221
 
-    ## [1] 601.8695
+    ## [1] 687.0446
 
-    ## [1] 826.2812
+    ## [1] 878.7862
 
 ## Plot the whole dataset and test dataset of Random Forest Model
 
     ##   green_rating     yhat
-    ## 1            0 2401.483
-    ## 2            1 2482.028
+    ## 1            0 2409.996
+    ## 2            1 2477.725
 
-![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-14-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-14-2.png)
+![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-13-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-13-2.png)
 
 For this question, we know greenbuildings have many variables and “LEED”
 and “Energystar” are certified in the green category. So we use
@@ -159,8 +129,8 @@ Next we used Random Forest Model and Gradient-Boosted Model with same
 variables of greenbuildngs. Then we predicted two models in the test
 data as the same as in lasso and lm medium. After comparing the rmse of
 these models, we selected the Random Forest Model because the rmse of
-this model is the smallest one.Then we finished partial dependence plots
-between revenue per square and “green\_rating”.
+this model is the smallest one. Then we finished partial dependence
+plots between revenue per square and “green\_rating”.
 
 Finally, from partial values and partial plots, the difference between
 “green\_rating”=1 and “green\_rating” = 0 is 61.663. So it means the
@@ -173,37 +143,25 @@ by other variables including stories, ages, and precipitation.
 
 ## lm\_medium
 
-    ## [1] 68764.5
+    ## [1] 69156.58
 
 ## Random\_Forest\_Model
 
-    ## [1] 51038.41
+    ## [1] 50122.87
 
 ## Gradient boosted tree models
 
     ## Distribution not specified, assuming gaussian ...
 
-![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-18-1.png)
+    ## [1] 51847.2
 
-    ## [1] 500
-    ## attr(,"smoother")
-    ## Call:
-    ## loess(formula = object$oobag.improve ~ x, enp.target = min(max(4, 
-    ##     length(x)/10), 50))
-    ## 
-    ## Number of Observations: 500 
-    ## Equivalent Number of Parameters: 39.85 
-    ## Residual Standard Error: 7274000
+    ## [1] 69156.58
 
-    ## [1] 52564.6
+    ## [1] 50122.87
 
-    ## [1] 68764.5
+    ## [1] 51847.2
 
-    ## [1] 51038.41
-
-    ## [1] 52564.6
-
-![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-20-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-20-2.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-20-3.png)
+![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-19-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-19-2.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-19-3.png)
 
 For this question, in order to search and get the relationship between
 median House Value and other variables, we consider all variables in
