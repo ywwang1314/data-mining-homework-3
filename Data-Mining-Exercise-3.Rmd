@@ -1,0 +1,291 @@
+---
+title: "Exercise 3"
+author: "Shankai Liao, Xing Xin, Yiwen Wang"
+date: "4/6/2022"
+output: md_document
+---
+Author:
+
+Shankai Liao
+
+Xing Xin
+
+Yiwen Wang
+
+```{r setup, include=FALSE}
+  knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Question 1
+
+1.It does mean the correlation between "Crime" and "Police", however, does not automatically mean that the change in "Police" is the cause of the change in the values of the "Crime". Causation indicates that one event is the result of the occurrence of the other event and the direction between variables is single. Moreover, other characteristics of different cities may also cause the change in the measure of crime rate so it is hard to attribute causation into "Police".
+
+2.Researchers found a city Washington DC, where the stronger effect of higher police officers is mainly because it is a terrorist target. In this way, since the additional police power leads to lower crime rate, they could conclude the causation association between "Police" and "Crime". Table 2 regresses daily crime totals against the terror alert level. It is statistically significant coefficient at the 5% level and indicates total crime rate decreases by an average of 7 crimes approximately.. 
+
+3.It aims to test whether there are fewer visitors on high-alert days since metro ridership could be a good proxy for tourism. However, the effect of the Metro ridership is small. Including logged mid-day Metro ridership directly in the regression is able to verify that high-alert levels are not being confounded with tourism levels.
+
+4.Table 4 shows the change in crime on high-alert days for one specific district (the national mall) caused by the police power. We found that there is a decline of around 2.6 crimes which means additional police could increase safety as an effective way. With regard to other region, the impact of police is not as obvious as district 1. They shows a much smaller and statistically insignificant decline of 0.5 crimes.
+
+# Question 2
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(rpart)
+library(rpart.plot)
+library(rsample) 
+library(randomForest)
+library(lubridate)
+library(modelr)
+library(gbm)
+library(pdp)
+
+dengue = read.csv('https://raw.githubusercontent.com/jgscott/ECO395M/master/data/dengue.csv')
+
+dengue<-na.omit(dengue)
+dengue = mutate(dengue, specific_humidity, precipitation_amt, season=factor(season))
+
+dengue_split =  initial_split(dengue, prop=0.8)
+dengue_train = training(dengue_split)
+dengue_test  = testing(dengue_split)
+```
+
+## CART Model
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+dengue_tree = rpart(total_cases~specific_humidity + precipitation_amt + season, data=dengue_train,
+                  control = rpart.control(cp = 0.002, minsplit=30))
+
+rmse(dengue_tree, dengue_test)
+
+prune_1se = function(my_tree) {
+  out = as.data.frame(my_tree$cptable)
+  thresh = min(out$xerror + out$xstd)
+  cp_opt = max(out$CP[out$xerror <= thresh])
+  prune(my_tree, cp=cp_opt) }
+
+dengue_tree_lse<-prune_1se(dengue_tree)
+```
+
+## Random_forest_model
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+dengue.forest = randomForest(total_cases ~ specific_humidity + precipitation_amt + season, data = dengue_train, importance = TRUE)
+yhat_test = predict(dengue.forest, dengue_test)
+plot(yhat_test)
+
+rmse(dengue.forest, dengue_test)
+vi = varImpPlot(dengue.forest, type=1)
+```
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+partialPlot(dengue.forest, dengue_test, 'specific_humidity', las=1)
+partialPlot(dengue.forest, dengue_test, 'precipitation_amt', las=1)
+partialPlot(dengue.forest, dengue_test, 'season', las=1)
+```
+
+## Gradient-boosted Tree
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+
+boost1 = gbm(total_cases ~ specific_humidity + precipitation_amt + season, data=dengue_train,interaction.depth=4, n.trees=500, shrinkage=.05)
+
+gbm.perf(boost1)
+
+yhat_test_gbm = predict(boost1, dengue_test, n.trees=500)
+plot(yhat_test_gbm)
+```
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+rmse(boost1, dengue_test)
+```
+
+## RMSE
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+rmse(dengue_tree_lse, dengue_test)
+rmse(dengue.forest, dengue_test)
+rmse(boost1, dengue_test)
+```
+
+RMSE of Gradient-boosted trees 30.63928 > RMSE of CART 29.69053 > RMSE of Random Forest 28.67363. 
+
+We chose another feature called season because we think dengue cases are related to different seasons. We used three models: CART, Random Forest, and Gradient-boosted trees. After comparing the rmse of three models, Random Forest has advantages to predict the relationship between dengue cases and certain variables because it has the lowest value of rmse. So we have created three partial dependence plots: specific_humidity, precipitation_amt, season of Random Forest model. Please see three plots after Random Forest of this question.
+
+# Question 3
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(randomForest)
+library(gbm)
+library(pdp)
+library(modelr)
+library(rsample)
+library(foreach)
+library(mosaic)
+library(ggplot2)
+library(tree)
+library(rpart)
+library(rpart.plot)
+library(glmnet)
+
+
+greenbuildings = read.csv('https://raw.githubusercontent.com/jgscott/ECO395M/master/data/greenbuildings.csv')
+
+greenbuildings<-mutate(greenbuildings,LEED=factor(LEED),Energystar=factor(Energystar), green_rating=factor(green_rating))
+greenbuildings<-na.omit(greenbuildings)
+greenbuildings_update = mutate(greenbuildings,revenue_year_square = greenbuildings$Rent*greenbuildings$leasing_rate)
+
+greenbuildings_split = initial_split(greenbuildings_update)
+greenbuildings_train = training(greenbuildings_split)
+greenbuildings_test = testing(greenbuildings_split)
+```
+
+## lasso and lm medium
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+#lasso and lm medium
+X_train = model.matrix(revenue_year_square ~ .-Rent-leasing_rate-LEED-Energystar, data = greenbuildings_train)
+Y_train = greenbuildings_train$revenue_year_square
+lasso = glmnet(X_train, Y_train, family="gaussian", alpha = 1)
+
+best_lambda=lasso$lambda.min
+```
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+X_test = model.matrix(revenue_year_square ~ .-Rent-leasing_rate-LEED-Energystar, data = greenbuildings_test)
+Y_test = greenbuildings_test$revenue_year_square
+Y_hat = predict(lasso, newx = X_test)
+
+lm_medium = lm(revenue_year_square ~ .-Rent-leasing_rate-LEED-Energystar,data = greenbuildings_train)
+
+
+rmse(lm_medium, greenbuildings_test)
+(mean((Y_hat-Y_test)^2))^0.5
+```
+
+## Random Forest Model 
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+
+greenbuildings.forest = randomForest(revenue_year_square ~ .-Rent-leasing_rate-LEED-Energystar,data = greenbuildings_train, importance = TRUE)
+
+rmse(greenbuildings.forest, greenbuildings_test)
+```
+
+## Gradient-Boosted Tree Model
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+
+boost2 = gbm(revenue_year_square ~ .-Rent-leasing_rate-LEED-Energystar, data = greenbuildings_train,interaction.depth=4, n.trees=500, shrinkage=.05)
+
+gbm.perf(boost2)
+rmse(boost2, greenbuildings_test)
+```
+
+## RMSE
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+rmse(lm_medium, greenbuildings_test)
+(mean((Y_hat-Y_test)^2))^0.5
+rmse(greenbuildings.forest, greenbuildings_test)
+rmse(boost2, greenbuildings_test)
+```
+
+## Plot the whole dataset and test dataset of Random Forest Model
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+
+partial(greenbuildings.forest, pred.var = 'green_rating', las=1)
+partialPlot(greenbuildings.forest, greenbuildings, 'green_rating', las=1)
+
+partialPlot(greenbuildings.forest, greenbuildings_test, 'green_rating', las=1)
+```
+
+For this question, we know greenbuildings have many variables and "LEED" and "Energystar" are certified in the green category. So we use "green_rating" this variable during the choosing model process. In addition, revenue per square equals "Rent multiply leasing_rate" and we deleted these two variables in using models.
+
+Firstly, We used lasso to choose effective variables and predict how revenue per square was impacted by lasso and find the perfect lasso. We also created lm medium to find the relationship between revenue per square and other variables except LEED, Energystar, Rent, leasing_rate. After comparing the three different rmse, we decide to use lm medium as the model to compare with other different models.
+
+Next we used Random Forest Model and Gradient-Boosted Model with same variables of greenbuildngs. Then we predicted two models in the test data as the same as in lasso and lm medium. After comparing the rmse of these models, we selected the Random Forest Model because the rmse of this model is the smallest one.Then we finished partial dependence plots between revenue per square and "green_rating".
+
+Finally, from partial values and partial plots, the difference between "green_rating"=1 and "green_rating" = 0 is 61.663. So it means the revenue per square will increase when house become "green certified". However, we think the revenue per square has little difference whether house are "green certified". The revenue per square might be influenced by other variables including stories, ages, and precipitation.
+
+# Question 4
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(rpart)
+library(rpart.plot)
+library(rsample) 
+library(randomForest)
+library(lubridate)
+library(modelr)
+library(gbm)
+library(pdp)
+
+CAhousing = read.csv('https://raw.githubusercontent.com/jgscott/ECO395M/master/data/CAhousing.csv')
+
+CAhousing_split = initial_split(CAhousing, prop = 0.8)
+CAhousing_train = training(CAhousing_split)
+CAhousing_test = testing(CAhousing_split)
+```
+
+## lm_medium
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+
+lm_medium = lm(medianHouseValue ~ longitude + latitude + housingMedianAge + totalRooms + totalBedrooms + population + households + medianIncome,data = CAhousing_train)
+
+rmse(lm_medium, CAhousing_test)
+```
+
+## Random_Forest_Model
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+
+
+CAhousing.forest = randomForest(medianHouseValue ~ longitude + latitude + housingMedianAge + totalRooms + totalBedrooms + population + households + medianIncome,data = CAhousing_train, importance = TRUE)
+
+rmse(CAhousing.forest, CAhousing_test)
+```
+
+## Gradient boosted tree models
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+
+
+boost3 = gbm(medianHouseValue ~ longitude + latitude + housingMedianAge + totalRooms + totalBedrooms + population + households + medianIncome,data = CAhousing_train,interaction.depth=4, n.trees=500, shrinkage=.05)
+
+gbm.perf(boost3)
+rmse(boost3, CAhousing_test)
+```
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+rmse(lm_medium, CAhousing_test)
+rmse(CAhousing.forest, CAhousing_test)
+rmse(boost3, CAhousing_test)
+```
+
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+ggplot(CAhousing) + 
+  geom_point(aes(x=longitude, y=latitude, color=medianHouseValue)) + 
+  scale_color_continuous(type = "viridis")
+
+lm1 = update(CAhousing.forest, data = CAhousing)
+
+CA = CAhousing %>%
+  mutate(VALUE_pred = predict(lm1), residual = medianHouseValue - VALUE_pred) %>%
+  arrange(longitude)
+
+ggplot(CA) + 
+  geom_point(aes(x=longitude, y=latitude, color=VALUE_pred)) +
+  scale_color_continuous(type = "viridis")
+
+ggplot(CA) + 
+  geom_point(aes(x=longitude, y=latitude, color=residual)) +
+  scale_color_continuous(type = "viridis")
+```
+
+For this question, in order to search and get the relationship between median House Value and other variables, we consider all variables in this question. Firstly, we consider lm_medium in the model and find the rmse of lm_medium. Then we use Random Forest model and Gradient-Boosted model of whole varaibles and hope to calculate the rmse of two models. 
+
+Then we collected rmse of different models together and compare the rmse value. After comparing different models, we think the best model is Random Forest Model and we did three figures including realistic dataset, prediction, and the residual within using ggplot. 
+
