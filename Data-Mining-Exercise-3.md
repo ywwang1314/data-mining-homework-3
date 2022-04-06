@@ -42,11 +42,11 @@ smaller and statistically insignificant decline of 0.5 crimes.
 
 ## CART Model
 
-    ## [1] 26.5398
+    ## [1] 34.28437
 
 ## Random\_forest\_model
 
-    ## [1] 24.00685
+    ## [1] 33.03135
 
 ![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-4-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-4-2.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-4-3.png)
 
@@ -54,15 +54,15 @@ smaller and statistically insignificant decline of 0.5 crimes.
 
     ## Distribution not specified, assuming gaussian ...
 
-    ## [1] 27.64943
+    ## [1] 32.05843
 
 ## RMSE
 
-    ## [1] 23.1516
+    ## [1] 35.79179
 
-    ## [1] 24.00685
+    ## [1] 33.03135
 
-    ## [1] 27.64943
+    ## [1] 32.05843
 
 RMSE of Gradient-boosted trees 30.63928 &gt; RMSE of CART 29.69053 &gt;
 RMSE of Random Forest 28.67363.
@@ -80,35 +80,35 @@ plots after Random Forest of this question.
 
 ## lasso and lm medium
 
-    ## [1] 1005.703
+    ## [1] 1013.317
 
-    ## [1] 1059.221
+    ## [1] 1083.241
 
 ## Random Forest Model
 
-    ## [1] 687.0446
+    ## [1] 671.1366
 
 ## Gradient-Boosted Tree Model
 
     ## Distribution not specified, assuming gaussian ...
 
-    ## [1] 878.7862
+    ## [1] 876.8001
 
 ## RMSE
 
-    ## [1] 1005.703
+    ## [1] 1013.317
 
-    ## [1] 1059.221
+    ## [1] 1083.241
 
-    ## [1] 687.0446
+    ## [1] 671.1366
 
-    ## [1] 878.7862
+    ## [1] 876.8001
 
 ## Plot the whole dataset and test dataset of Random Forest Model
 
     ##   green_rating     yhat
-    ## 1            0 2409.996
-    ## 2            1 2477.725
+    ## 1            0 2405.008
+    ## 2            1 2436.557
 
 ![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-13-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-13-2.png)
 
@@ -143,23 +143,25 @@ by other variables including stories, ages, and precipitation.
 
 ## lm\_medium
 
-    ## [1] 69156.58
+    ## [1] 70153.51
 
 ## Random\_Forest\_Model
 
-    ## [1] 50122.87
+    ## [1] 51012.32
 
 ## Gradient boosted tree models
 
     ## Distribution not specified, assuming gaussian ...
 
-    ## [1] 51847.2
+    ## [1] 51977.24
 
-    ## [1] 69156.58
+## RMSE
 
-    ## [1] 50122.87
+    ## [1] 70153.51
 
-    ## [1] 51847.2
+    ## [1] 51012.32
+
+    ## [1] 51977.24
 
 ![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-19-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-19-2.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-19-3.png)
 
