@@ -42,11 +42,15 @@ smaller and statistically insignificant decline of 0.5 crimes.
 
 ## CART Model
 
-    ## [1] 34.28437
+    ## [1] 28.54
 
 ## Random\_forest\_model
 
-    ## [1] 33.03135
+![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+
+    ## [1] 25.73506
+
+![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-3-2.png)
 
 ![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-4-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-4-2.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-4-3.png)
 
@@ -54,18 +58,17 @@ smaller and statistically insignificant decline of 0.5 crimes.
 
     ## Distribution not specified, assuming gaussian ...
 
-    ## [1] 32.05843
+![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+
+    ## [1] 27.0322
 
 ## RMSE
 
-    ## [1] 35.79179
+    ## [1] 26.22711
 
-    ## [1] 33.03135
+    ## [1] 25.73506
 
-    ## [1] 32.05843
-
-RMSE of Gradient-boosted trees 30.63928 &gt; RMSE of CART 29.69053 &gt;
-RMSE of Random Forest 28.67363.
+    ## [1] 27.0322
 
 We chose another feature called season because we think dengue cases are
 related to different seasons. We used three models: CART, Random Forest,
@@ -80,35 +83,35 @@ plots after Random Forest of this question.
 
 ## lasso and lm medium
 
-    ## [1] 1013.317
+    ## [1] 1004.429
 
-    ## [1] 1083.241
+    ## [1] 1074.914
 
 ## Random Forest Model
 
-    ## [1] 671.1366
+    ## [1] 690.1291
 
 ## Gradient-Boosted Tree Model
 
     ## Distribution not specified, assuming gaussian ...
 
-    ## [1] 876.8001
+    ## [1] 869.6683
 
 ## RMSE
 
-    ## [1] 1013.317
+    ## [1] 1004.429
 
-    ## [1] 1083.241
+    ## [1] 1074.914
 
-    ## [1] 671.1366
+    ## [1] 690.1291
 
-    ## [1] 876.8001
+    ## [1] 869.6683
 
 ## Plot the whole dataset and test dataset of Random Forest Model
 
     ##   green_rating     yhat
-    ## 1            0 2405.008
-    ## 2            1 2436.557
+    ## 1            0 2413.357
+    ## 2            1 2480.768
 
 ![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-13-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-13-2.png)
 
@@ -143,25 +146,25 @@ by other variables including stories, ages, and precipitation.
 
 ## lm\_medium
 
-    ## [1] 70153.51
+    ## [1] 68838.24
 
 ## Random\_Forest\_Model
 
-    ## [1] 51012.32
+    ## [1] 51156.85
 
 ## Gradient boosted tree models
 
     ## Distribution not specified, assuming gaussian ...
 
-    ## [1] 51977.24
+    ## [1] 51367.49
 
 ## RMSE
 
-    ## [1] 70153.51
+    ## [1] 68838.24
 
-    ## [1] 51012.32
+    ## [1] 51156.85
 
-    ## [1] 51977.24
+    ## [1] 51367.49
 
 ![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-19-1.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-19-2.png)![](Data-Mining-Exercise-3_files/figure-markdown_strict/unnamed-chunk-19-3.png)
 
@@ -174,4 +177,7 @@ model of whole varaibles and hope to calculate the rmse of two models.
 Then we collected rmse of different models together and compare the rmse
 value. After comparing different models, we think the best model is
 Random Forest Model and we did three figures including realistic
-dataset, prediction, and the residual within using ggplot.
+dataset, prediction, and the residual within using ggplot. In
+conclusion, when we use the Random Forest model, we predict that the
+median House Value in middle and south area is higher than the north and
+east part of California.

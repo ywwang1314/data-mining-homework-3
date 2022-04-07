@@ -71,10 +71,11 @@ dengue_tree_lse<-prune_1se(dengue_tree)
 
 ```{r, echo=FALSE,message=FALSE, warning=FALSE}
 dengue.forest = randomForest(total_cases ~ specific_humidity + precipitation_amt + season, data = dengue_train, importance = TRUE)
-
+yhat_test = predict(dengue.forest, dengue_test)
+plot(yhat_test)
 
 rmse(dengue.forest, dengue_test)
-
+vi = varImpPlot(dengue.forest, type=1)
 ```
 
 ```{r, echo=FALSE,message=FALSE, warning=FALSE}
@@ -89,6 +90,9 @@ partialPlot(dengue.forest, dengue_test, 'season', las=1)
 
 boost1 = gbm(total_cases ~ specific_humidity + precipitation_amt + season, data=dengue_train,interaction.depth=4, n.trees=500, shrinkage=.05)
 
+yhat_test_gbm = predict(boost1, dengue_test, n.trees=500)
+plot(yhat_test_gbm)
+
 rmse(boost1, dengue_test)
 ```
 
@@ -98,8 +102,6 @@ rmse(dengue_tree_lse, dengue_test)
 rmse(dengue.forest, dengue_test)
 rmse(boost1, dengue_test)
 ```
-
-RMSE of Gradient-boosted trees 30.63928 > RMSE of CART 29.69053 > RMSE of Random Forest 28.67363. 
 
 We chose another feature called season because we think dengue cases are related to different seasons. We used three models: CART, Random Forest, and Gradient-boosted trees. After comparing the rmse of three models, Random Forest has advantages to predict the relationship between dengue cases and certain variables because it has the lowest value of rmse. So we have created three partial dependence plots: specific_humidity, precipitation_amt, season of Random Forest model. Please see three plots after Random Forest of this question.
 
@@ -140,7 +142,6 @@ greenbuildings_test = testing(greenbuildings_split)
 X_train = model.matrix(revenue_year_square ~ .-Rent-leasing_rate-LEED-Energystar, data = greenbuildings_train)
 Y_train = greenbuildings_train$revenue_year_square
 lasso = glmnet(X_train, Y_train, family="gaussian", alpha = 1)
-
 best_lambda=lasso$lambda.min
 ```
 
@@ -275,5 +276,5 @@ ggplot(CA) +
 
 For this question, in order to search and get the relationship between median House Value and other variables, we consider all variables in this question. Firstly, we consider lm_medium in the model and find the rmse of lm_medium. Then we use Random Forest model and Gradient-Boosted model of whole varaibles and hope to calculate the rmse of two models. 
 
-Then we collected rmse of different models together and compare the rmse value. After comparing different models, we think the best model is Random Forest Model and we did three figures including realistic dataset, prediction, and the residual within using ggplot. 
+Then we collected rmse of different models together and compare the rmse value. After comparing different models, we think the best model is Random Forest Model and we did three figures including realistic dataset, prediction, and the residual within using ggplot. In conclusion, when we use the Random Forest model, we predict that the median House Value in middle and south area is higher than the north and east part of California. 
 
